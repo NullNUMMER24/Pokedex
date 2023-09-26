@@ -12,6 +12,11 @@ type Pokemon struct {
 	Name  string `json:"name"`
 	HP    string `json:"hp"`
 	ASCII string `json:"ASCII"`
+	TYPE  []TYPE `json:"type"`
+}
+
+type TYPE struct {
+	TYPE string
 }
 
 func main() {
@@ -23,7 +28,7 @@ func main() {
 
 	// Print the fetched data
 	for _, pokemon := range pokemons {
-		fmt.Printf("ID: %d\nName: %s\nHP: %s\n %s \n", pokemon.ID, pokemon.Name, pokemon.HP, pokemon.ASCII)
+		fmt.Printf("ID: %d\nName: %s\nHP: %s\nType: %s\n %s \n", pokemon.ID, pokemon.Name, pokemon.HP, pokemon.TYPE, pokemon.ASCII)
 	}
 }
 
