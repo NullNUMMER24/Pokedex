@@ -1,10 +1,16 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
+	"os/exec"
+
+	"github.com/mattn/go-tty"
 )
 
 type Pokemon struct {
@@ -27,44 +33,80 @@ func main() {
 	}
 
 	// Ask the user what he wants to do
-	// c := exec.Command("clear")
-	// fmt.Printf("Select what you want to do:")
-	// for {
-	// 	keyboard.Listen(func(key keys.Key) (stop bool, err error) {
-	// 		if key.Code == keys.ArrowDown {
-	// 			c.Stdout = os.Stdout
-	// 			c.Run()
+	options := [3]string{"Select Pokemon", "Show all Pokemon", "Quit"}
+	count := 1
+	c := exec.Command("clear")
+	fmt.Println("Select what you want to do:")
+	for _, option := range options {
+		fmt.Printf("[%d] - %s\n", count, option)
+		count++
+	}
 
-	// 		}
-	// 		return false, nil
-	// 	})
-	// 	keyInfo, _ := keyboard.GetKey()
-	// 	key := keyInfo.Code
+	tty, err := tty.Open()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer tty.Close()
 
-	// 	if key == keys.ArrowDown {
-	// 		c.Stdout = os.Stdout
-	// 		c.Run()
+	r, err := tty.ReadRune()
 
-	// 	}
-	// 	fmt.Printf("test")
-	// 	keyboard.StopListener()
+	for {
 
-	// 	if key == keys.ENTER {
-	// 		break
-	// 	}
-	// }
-
-	// Print the fetched data
-	for _, pokemon := range pokemons {
-		var elements string
-		for _, type0 := range pokemon.TYPE {
-			elements += type0.TYPE + ", "
-
+		if err != nil {
+			log.Fatal(err)
 		}
 
-		elements = elements[:len(elements)-1]
-		fmt.Printf("ID: %d\nName: %s\nHP: %s\nType: %s\n %s \n", pokemon.ID, pokemon.Name, pokemon.HP, elements, pokemon.ASCII)
+		fmt.Print(r)
+		if string(r) != "" {
+			break
+		}
+
 	}
+	if string(r) == "1" {
+		c.Stdout = os.Stdout
+		c.Run()
+		println("You choose Option 1")
+		println("Which Pokemon do you want to select?")
+		reader := bufio.NewReader(os.Stdin)
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, pokemon := range pokemons {
+			var elements string
+			for _, type0 := range pokemon.TYPE {
+				elements += type0.TYPE + ", "
+			}
+			if line == pokemon.Name {
+				fmt.Printf("ID: %d\nName: %s\nHP: %s\nType: %s\n %s \n", pokemon.ID, pokemon.Name, pokemon.HP, elements, pokemon.ASCII)
+			}
+		}
+	}
+	if string(r) == "2" {
+		c.Stdout = os.Stdout
+		c.Run()
+		println("You choose Option 2")
+		println("Here are all Pokemons")
+		// Print all Pokemon
+		for _, pokemon := range pokemons {
+			var elements string
+			for _, type0 := range pokemon.TYPE {
+				elements += type0.TYPE + ", "
+
+			}
+
+			elements = elements[:len(elements)-1]
+			fmt.Printf("ID: %d\nName: %s\nHP: %s\nType: %s\n %s \n", pokemon.ID, pokemon.Name, pokemon.HP, elements, pokemon.ASCII)
+		}
+	}
+	if string(r) == "3" {
+		c.Stdout = os.Stdout
+		c.Run()
+		println("You choose Option 3")
+		println("Good Bye!")
+
+	}
+
 }
 
 func fetchPokemonData() ([]Pokemon, error) {
