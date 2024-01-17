@@ -33,7 +33,7 @@ func main() {
 	}
 
 	// Ask the user what he wants to do
-	options := [3]string{"Select Pokemon", "Show all Pokemon", "Quit"}
+	options := [4]string{"Select Pokemon", "Show all Pokemon", "Show Pokemons from an Element", "Quit"}
 	count := 1
 	c := exec.Command("clear")
 	fmt.Println("Select what you want to do:")
@@ -65,19 +65,20 @@ func main() {
 	if string(r) == "1" {
 		c.Stdout = os.Stdout
 		c.Run()
-		println("You choose Option 1")
+		println("You choose Option " + string(r))
 		println("Which Pokemon do you want to select?")
-		reader := bufio.NewReader(os.Stdin)
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			log.Fatal(err)
-		}
+
 		for _, pokemon := range pokemons {
+			reader := bufio.NewReader(os.Stdin)
+			line, err := reader.ReadString('\n')
+			if err != nil {
+				log.Fatal(err)
+			}
 			var elements string
 			for _, type0 := range pokemon.TYPE {
 				elements += type0.TYPE + ", "
 			}
-			if line == pokemon.Name {
+			if string(line) == pokemon.Name {
 				fmt.Printf("ID: %d\nName: %s\nHP: %s\nType: %s\n %s \n", pokemon.ID, pokemon.Name, pokemon.HP, elements, pokemon.ASCII)
 			}
 		}
@@ -85,7 +86,7 @@ func main() {
 	if string(r) == "2" {
 		c.Stdout = os.Stdout
 		c.Run()
-		println("You choose Option 2")
+		println("You choose Option " + string(r))
 		println("Here are all Pokemons")
 		// Print all Pokemon
 		for _, pokemon := range pokemons {
@@ -99,10 +100,19 @@ func main() {
 			fmt.Printf("ID: %d\nName: %s\nHP: %s\nType: %s\n %s \n", pokemon.ID, pokemon.Name, pokemon.HP, elements, pokemon.ASCII)
 		}
 	}
+
 	if string(r) == "3" {
 		c.Stdout = os.Stdout
 		c.Run()
-		println("You choose Option 3")
+		println("You choose Option " + string(r))
+		println("From which element do you want to see all Pokemon")
+
+	}
+
+	if string(r) == "4" {
+		c.Stdout = os.Stdout
+		c.Run()
+		println("You choose Option " + string(r))
 		println("Good Bye!")
 
 	}

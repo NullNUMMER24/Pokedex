@@ -9,3 +9,12 @@ npm install -g json-server
 ```
 json-server --watch pokedex.json
 ```
+## GO 
+### Run the go file
+```
+go run main
+```
+### Add new modules
+```
+go get github.com/mattn/go-tty
+```
